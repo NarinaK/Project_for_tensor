@@ -1,0 +1,71 @@
+from selenium import webdriver
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+browser = webdriver.Chrome()
+browser.maximize_window()
+browser.implicitly_wait(3)
+
+link = "https://ya.ru/"
+browser.get(link)
+search = browser.find_element(By.ID, "text")
+assert search.is_displayed()
+search.click()
+search1 = browser.find_element(By.PARTIAL_LINK_TEXT, "Все")
+assert search1.is_displayed()
+search1.click()
+img = browser.find_element(By.PARTIAL_LINK_TEXT, "Картинки")
+assert img.is_displayed()
+img.click()
+browser.switch_to.window(browser.window_handles[-1])
+time.sleep(5)
+checkURL = browser.current_url
+assert check_url() == "https://ya.ru/images/"
+
+# Один из вариантов проверки на соответствие URL адреса https://ya.ru/images/
+#image = img.get_attribute("href")
+#print(image)
+#if image == "https://ya.ru/images/":
+#    img.click()
+#else:
+#    assert img.is_displayed()
+
+#try:
+#    image_link = WebDriverWait(browser,10).until(
+#        EC.text_to_be_present_in_element(By.LINK_TEXT,"https://ya.ru/images/")
+#    )
+#except:
+#    print("error")
+
+first_img = browser.find_element(By.CLASS_NAME, "PopularRequestList-SearchText")
+first_img.click()
+
+name_of_category = browser.find_element(By.NAME, "text")
+category_name = bool(name_of_category.get_attribute("value"))
+assert category_name.is_displayed()
+time.sleep(5)
+picture = browser.find_element(By.CLASS_NAME, "serp-item")
+picture.click()
+picture_isDispl = browser.find_element(By.CLASS_NAME, "MMImage-Preview")
+time.sleep(5)
+assert picture_isDispl.is_displayed()
+pic_text = picture_isDispl.get_attribute("src")
+next_picture = browser.find_element(By.CLASS_NAME, "CircleButton_type_next ")
+assert next_picture.is_displayed()
+next_picture.click()
+time.sleep(5)
+pic_next = picture_isDispl.get_attribute("src")
+assert pic_text != pic_next
+prev_pic = browser.find_element(By.CLASS_NAME, "CircleButton_type_prev ")
+assert prev_pic.is_displayed()
+prev_pic.click()
+pic_prev = picture_isDispl.get_attribute("src")
+assert pic_prev == pic_prev
+time.sleep(5)
+
+
+
+

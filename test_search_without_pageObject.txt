@@ -1,0 +1,32 @@
+from selenium import webdriver
+import time
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+
+browser = webdriver.Chrome()
+browser.maximize_window()
+browser.implicitly_wait(3)
+
+link = "https://ya.ru/"
+browser.get(link)
+time.sleep(2)
+search = browser.find_element(By.ID, "text")
+assert search.is_displayed()
+search.send_keys("Тензор")
+suggest = browser.find_element(By.CLASS_NAME,"mini-suggest__popup-content")
+time.sleep(7)
+assert suggest.is_displayed()
+search.send_keys(Keys.ENTER)
+time.sleep(7)
+result = browser.find_element(By.ID, "search-result")
+assert result.is_displayed()
+name_first = browser.find_element(By.LINK_TEXT,"tensor.ru")
+#assert name_first.is_displayed()
+first_link = name_first.get_attribute("href")
+#print(first_link)
+if first_link == "https://tensor.ru/":
+    name_first.click()
+else:
+    assert name_first.is_displayed()
+#browser.close()
+
